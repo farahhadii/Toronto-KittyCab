@@ -1,0 +1,12 @@
+{
+    "name": "CPS510",
+    "version": "1.0.0",
+    "private": true,
+    "description": "",
+    "keywords": [],
+    "author": "Ryan Abdi",
+    "license": "MIT",
+    "dependencies": {
+      "oracledb": "^6.0"
+    }
+  }
