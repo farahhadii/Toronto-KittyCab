@@ -1,4 +1,4 @@
-# cps510-frontend
+# CPS510 - Toronto KittyCab
 ## Stack
 Front-end: JavaScript, CSS
 Back-end: Express, Node.js
