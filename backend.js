@@ -8,10 +8,9 @@ oracledb.initOracleClient({ libDir: 'instantclient_21_12' });
 const app = express();
 app.use(express.json()); 
 
-
+//Creating tables endpoint
 app.post('/create-table', async (req, res) => {
     let connection;
-
     try {
         connection = await oracledb.getConnection({
             user: process.env.DB_USER,
@@ -39,24 +38,36 @@ app.post('/create-table', async (req, res) => {
             FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
         );
         
-        CREATE TABLE Car (
-            CarID INT PRIMARY KEY,
-            CarMake VARCHAR(255),
-            CarModel VARCHAR(255),
-            CarYear INT,
-            CarInsurance VARCHAR(255),
-            CarTier VARCHAR(255),
-            VINNumber INT CHECK (VINNumber >= 00000000000000001 and VINNumber <= 999999999999999999)
-        );
-        
         CREATE TABLE Driver (
             DriverID INT PRIMARY KEY,
             AccountID INT,
-            CarID INT,
             LicenseNumber VARCHAR(255) NOT NULL,
             Experience INT,
-            FOREIGN KEY (AccountID) REFERENCES Account(AccountID),
-            FOREIGN KEY (CarID) REFERENCES Car(CarID)
+            FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
+        );
+        
+        CREATE TABLE Registered_Car (
+            CarID INT,
+            DriverID INT,
+            CarInsurance VARCHAR(255) CHECK (CarInsurance = 'Yes' OR CarInsurance = 'No'),
+            FOREIGN KEY (DriverID) REFERENCES Driver(DriverID),
+            PRIMARY KEY (CarID, DriverID)
+        );
+        
+        CREATE TABLE Car_Model (
+            VINNumber INT CHECK (VINNumber >= 00000000000000001 and VINNumber <= 999999999999999999),
+            CarModelName VARCHAR(255),
+            CarYear INT CHECK (CarYear > 0 and CarYear <= 2024),
+            PRIMARY KEY (VINNumber, CarModelName)
+        );
+        
+        CREATE TABLE Car_Make (
+            CarID INT PRIMARY KEY,
+            CarMakeName VARCHAR(255),
+            CarModelName VARCHAR(255),
+            VINNumber INT CHECK (VINNumber >= 00000000000000001 and VINNumber <= 999999999999999999),
+            CarTier VARCHAR(255),
+            FOREIGN KEY (VINNumber, CarModelName) REFERENCES Car_Model(VINNumber, CarModelName)
         );
         
         CREATE TABLE Item (
@@ -106,6 +117,78 @@ app.post('/create-table', async (req, res) => {
         }
     }
 });
+
+
+//Inserting into table endpoint
+app.post('/populate-table', async (req, res) => {
+    let connection;
+    try {
+        connection = await oracledb.getConnection({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
+        });
+        console.log("Successfully connected to Oracle Database");
+
+        const populateTableSql = ``;
+        await connection.execute(populateTableSql);
+        res.status(200).send("Tables Populated successfully");
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error Populating tables: " + err.message);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+//Dropping table endpoint
+app.post('/drop-table', async (req, res) => {
+    let connection;
+    try {
+        connection = await oracledb.getConnection({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
+        });
+        console.log("Successfully connected to Oracle Database");
+
+        const dropTableSql = `DROP TABLE ACCOUNT CASCADE CONSTRAINTS;
+        DROP TABLE PASSENGER CASCADE CONSTRAINTS;
+        DROP TABLE DRIVER CASCADE CONSTRAINTS;
+        DROP TABLE ITEM CASCADE CONSTRAINTS;
+        DROP TABLE ORDERS CASCADE CONSTRAINTS;
+        DROP TABLE PACKAGEORDER CASCADE CONSTRAINTS;
+        DROP TABLE PICKUPORDER CASCADE CONSTRAINTS;
+        DROP TABLE Registered_Car CASCADE CONSTRAINTS;
+        DROP TABLE Car_Model CASCADE CONSTRAINTS;
+        DROP TABLE Car_Make CASCADE CONSTRAINTS`;
+        await connection.execute(dropTableSql);
+        res.status(200).send("Tables dropped successfully");
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error dropping tables: " + err.message);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
+});
+
+
+
+
 
 const port = 3000;
 app.listen(port, () => {
