@@ -1,5 +1,9 @@
 async function myFunction() {
-    let tableName = 'Account';
+    var params = new URLSearchParams(window.location.search);
+    var tableName = params.get('table');
+
+    console.log(tableName)
+
     const response = await fetch(`http://localhost:4000/select-table?table=${tableName}`, {
         method: 'GET',
         headers: {
@@ -12,5 +16,6 @@ async function myFunction() {
     }
 
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
+    return data;
 }

@@ -18,3 +18,25 @@
 .go-back-btn:hover {
     background-color: #2acce9;
 }
+
+.records-container{
+    height: 50vh;
+}
+
+#column-names {
+    display: flex;
+}
+
+.records-container {
+
+}
+
+.record-entry {
+    display: flex;
+    column-gap: 15px;
+}
+
+.column-input {
+    display: flex;
+    column-gap: 15px;
+}

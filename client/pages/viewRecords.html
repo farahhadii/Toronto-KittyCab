@@ -24,11 +24,69 @@
 
             <p>Table: <span id="table-name"></span></p>
 
-            <div class="records-container">
+            <div id="column-names"></div>
+            <div class="records-container" id="records-container"></div>
 
-            </div>
         </div>
     </div>
+
+    <script src="../js/selectTable.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const records = await myFunction();
+            console.log(records);
+
+            const recordsContainer = document.getElementById('records-container');
+            const columnNamesContainer = document.getElementById('column-names');
+
+            recordsContainer.innerHTML = '';
+            columnNamesContainer.innerHTML = '';
+
+            let count = 0;
+
+            records.forEach(record => {
+                const recordDiv = document.createElement('div');
+                recordDiv.classList.add('record-entry', 'record-row');
+
+                Object.keys(record).forEach((key, index, keys) => {
+                    if (count === 0 && key !== undefined) {
+                        const keys = Object.keys(record)
+                        const columnNameDiv = document.createElement('div');
+                        columnNameDiv.classList.add('column-input');
+
+                        keys.forEach(k => {
+                            const strongElement = document.createElement('strong');
+                            strongElement.style.width = '156px';
+                            strongElement.textContent = k;
+                            columnNameDiv.appendChild(strongElement);
+                        });
+
+                        columnNamesContainer.appendChild(columnNameDiv);
+                        count += 1;
+                    }
+
+                    const fieldDiv = document.createElement('div');
+
+                    fieldDiv.innerHTML = `<input type="text" value="${record[key]}" size="${17}">`;
+
+                    if (index === keys.length - 1) {
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.addEventListener('click', () => {
+                            // Farah make it call delete
+                            console.log(`Delete button clicked for row with ${key}: ${record[key]}`);
+                        });
+                        fieldDiv.appendChild(deleteButton);
+                    }
+
+                    recordDiv.appendChild(fieldDiv);
+
+                });
+
+                recordsContainer.appendChild(recordDiv);
+            });
+        });
+    </script>
 
     <footer>
         <div class="copyright">
