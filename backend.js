@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const oracledb = require('oracledb');
 const express = require('express');
 
@@ -6,14 +8,15 @@ oracledb.initOracleClient({ libDir: 'instantclient_21_12' });
 const app = express();
 app.use(express.json()); 
 
+
 app.post('/create-table', async (req, res) => {
     let connection;
 
     try {
         connection = await oracledb.getConnection({
-            user: "nberezyu",
-            password: "10025893",
-            connectionString: "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=oracle.scs.ryerson.ca)(PORT=1521))(CONNECT_DATA=(SID=orcl)))"
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
         });
         console.log("Successfully connected to Oracle Database");
 
