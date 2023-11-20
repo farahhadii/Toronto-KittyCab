@@ -1,0 +1,20 @@
+.view-records-container {
+    padding: 35px;
+}
+
+.go-back-btn {
+    display: inline-block;
+    padding: 20px 20px;
+    background-color: #1fbad6;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.go-back-btn:hover {
+    background-color: #2acce9;
+}
