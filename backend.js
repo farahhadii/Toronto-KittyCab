@@ -2,16 +2,20 @@ require('dotenv').config();
 
 const oracledb = require('oracledb');
 const express = require('express');
+const cors = require('cors');
 
 oracledb.initOracleClient({ libDir: 'instantclient_21_12' });
 
 const app = express();
-app.use(express.json()); 
+app.use(cors());
+app.use(express.json());
+
+oracledb.autoCommit = true;
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
     console.log("Hello");
-  })
+})
 
 //Creating tables endpoint
 app.post('/create-table', async (req, res) => {
@@ -187,6 +191,45 @@ app.post('/drop-table', async (req, res) => {
                 await connection.close();
             } catch (err) {
                 console.error(err);
+            }
+        }
+    }
+});
+
+//Viewing table endpoint
+app.get('/select-table', async (req, res) => {
+    let connection;
+
+    const tableName = req.query.table;
+    console.log(tableName);
+
+    try {
+        // Establish a connection to the Oracle Database
+        connection = await oracledb.getConnection({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
+        });
+        // Execute the SELECT query
+        const result = await connection.execute(`select * from ${tableName}`, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+          });
+
+        // Send the result back to the client
+        console.log(result);
+        res.status(200).json(result.rows);
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        res.status(500).send('Error executing query: ' + error.message);
+
+    } finally {
+        // Release the connection when done
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (error) {
+                console.error('Error closing connection:', error);
             }
         }
     }
