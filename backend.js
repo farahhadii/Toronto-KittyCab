@@ -8,6 +8,11 @@ oracledb.initOracleClient({ libDir: 'instantclient_21_12' });
 const app = express();
 app.use(express.json()); 
 
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+    console.log("Hello");
+  })
+
 //Creating tables endpoint
 app.post('/create-table', async (req, res) => {
     let connection;
@@ -101,8 +106,9 @@ app.post('/create-table', async (req, res) => {
             FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
             FOREIGN KEY (ItemID) REFERENCES Item(ItemID)
         )`;
+
         await connection.execute(createTableSql);
-        res.status(200).send("Tables created successfully");
+        res.status(200);
 
     } catch (err) {
         console.error(err);
@@ -186,11 +192,7 @@ app.post('/drop-table', async (req, res) => {
     }
 });
 
-
-
-
-
-const port = 3000;
-app.listen(port, () => {
+const port = 4000;
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server is running on port ${port}`);
 });
