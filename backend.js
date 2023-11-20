@@ -10,8 +10,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-oracledb.autoCommit = true;
-
 app.get('/', (req, res) => {
     res.send('Hello World!')
     console.log("Hello");
