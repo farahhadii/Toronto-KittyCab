@@ -173,7 +173,7 @@ app.post('/populate-table', async (req, res) => {
             `INSERT INTO ORDERS VALUES (8001, '16/10/23', 8.00, 3001)`,
             `INSERT INTO ORDERS VALUES (8002, '17/10/23', 50.00, 3001)`,
             `INSERT INTO ORDERS VALUES (8003, '17/10/23', 99.00, 3001)`,
-            `INSERT INTO ORDERS VALUES (8004, '18/OCT/23', 15.00, 3004)`,
+            `INSERT INTO ORDERS VALUES (8004, '18/10/23', 15.00, 3004)`,
             `INSERT INTO PickupOrder VALUES (9000, 8000, 2000)`,
             `INSERT INTO PickupOrder VALUES (9001, 8002, 2001)`,
             `INSERT INTO PickupOrder VALUES (9002, 8003, 2001)`,
