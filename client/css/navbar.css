@@ -1,24 +1,29 @@
-header {
+.header {
     background-color: #222233;
+    display: flex;
     justify-content: center;
-    align-items: center; 
+    align-items: center;
+    overflow: hidden;
 }
 
 .navbar {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+    background-color: #222233;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     overflow: hidden;
 }
 
 .navbar ul {
     margin: 0;
     padding: 0;
+    display: flex;
+    list-style: none;
 }
 
 .navbar li {
-    list-style-type: none;
-    display: inline-block; 
+    flex-grow: 1;
+    text-align: center;
 }
 
 .navbar a {
