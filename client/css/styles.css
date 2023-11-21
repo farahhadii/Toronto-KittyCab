@@ -11,10 +11,3 @@ body {
 .content {
     flex: 1;
 }
-
-footer {
-    background-color: #f4f4f4;
-    padding: 30px;
-    text-align: left;
-    font-weight: 700;
-}
