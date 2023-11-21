@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" href="../css/queryTables.css">
     <script src="../components/navbar.js" type="text/javascript" defer></script>
      <!--<link rel="icon" href="./media/" type="image/*"> -->
-
 </head>
 
 <body>
@@ -20,7 +19,9 @@
     <div class="content">
         <div class="query-container" id="query">
             <h1>Query Tables</h1>
-            <button onclick=myFunction()>Query Table</button>
+            <form action="http://localhost:4000/query-table" method="post">
+                <button onclick=queryTable()>Query Table</button>
+            </form>
         </div>
     </div>
 

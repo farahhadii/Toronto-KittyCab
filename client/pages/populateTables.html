@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" href="../css/populateTables.css">
     <script src="../components/navbar.js" type="text/javascript" defer></script>
     <!--<link rel="icon" href="./media/" type="image/*"> -->
-
 </head>
 
 <body>
@@ -20,7 +19,9 @@
     <div class="content">
         <div class="populate-container" id="populate">
             <h1>Populate Tables</h1>
-            <button onclick=myFunction()>Populate Table</button>
+            <form action="http://localhost:4000/populate-table" method="post">
+                <button onclick=populateTable()>Populate Table</button>
+            </form>
         </div>
     </div>
 

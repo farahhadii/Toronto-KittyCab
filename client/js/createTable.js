@@ -1,6 +1,7 @@
-async function myFunction() {
-    let tableName = 'Account';
-    const response = await fetch(`http://localhost:4000/create-table`);
+async function createTable() {
+    const response = await fetch(`http://localhost:4000/create-table`, {
+        method: 'POST',
+    });
 
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

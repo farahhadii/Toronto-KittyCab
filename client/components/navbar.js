@@ -11,10 +11,10 @@ class Header extends HTMLElement {
         <nav class="navbar">
             <ul>
                 <li><a href="../pages/home.html">Home</a></li>
-                <li><a href="../pages/dropTables.html">Drop</a></li>
                 <li><a href="../pages/createTables.html">Create</a></li>
                 <li><a href="../pages/populateTables.html">Populate</a></li>
                 <li><a href="../pages/queryTables.html">Query</a></li>
+                <li><a href="../pages/dropTables.html">Drop</a></li>
                 <li><a href="../pages/viewTables.html">View</a></li>
             </ul>
         </nav>
