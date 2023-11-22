@@ -1,8 +1,5 @@
-async function dropTable() {
-    const response = await fetch(`http://localhost:4000/drop-table`, {
-        method: 'POST',
-    });
-
+async function myFunction() {
+    const response = await fetch(`http://localhost:4000/drop-table`);
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }

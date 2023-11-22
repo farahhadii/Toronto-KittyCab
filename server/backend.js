@@ -171,13 +171,13 @@ app.post('/populate-table', async (req, res) => {
             `INSERT INTO Item VALUES (7003, 'Apple iPhone', 999.99, 'Apple Store', 'Latest iPhone model')`,
             `INSERT INTO ORDERS VALUES (8000, '15/10/23', 5.00, 3000)`,
             `INSERT INTO ORDERS VALUES (8001, '16/10/23', 8.00, 3001)`,
-            `INSERT INTO ORDERS VALUES (8002, '17/10/23', 50.00, 3001)`,
-            `INSERT INTO ORDERS VALUES (8003, '17/10/23', 99.00, 3001)`,
+            `INSERT INTO ORDERS VALUES (8002, '17/10/23', 50.00, 3002)`,
+            `INSERT INTO ORDERS VALUES (8003, '17/10/23', 99.00, 3003)`,
             `INSERT INTO ORDERS VALUES (8004, '18/10/23', 15.00, 3004)`,
             `INSERT INTO PickupOrder VALUES (9000, 8000, 2000)`,
             `INSERT INTO PickupOrder VALUES (9001, 8002, 2001)`,
-            `INSERT INTO PickupOrder VALUES (9002, 8003, 2001)`,
-            `INSERT INTO PickupOrder VALUES (9003, 8004, 2002)`,
+            `INSERT INTO PickupOrder VALUES (9002, 8003, 2002)`,
+            `INSERT INTO PickupOrder VALUES (9003, 8004, 2003)`,
             `INSERT INTO PackageOrder VALUES (10002, 8001, 7001)`,
             `INSERT INTO PackageOrder VALUES (10003, 8004, 7002)`
         ];
@@ -252,7 +252,7 @@ app.post('/drop-table', async (req, res) => {
 
 // Query Table 
 
-app.post('/query-table', async (req, res) => {
+app.post('/drop-table', async (req, res) => {
     let connection;
     try {
         connection = await oracledb.getConnection({
@@ -319,24 +319,6 @@ app.post('/query-table', async (req, res) => {
             INNER JOIN Passenger p ON a.AccountID = p.AccountID
             GROUP BY a.FirstName, a.LastName, p.SubscriptionType
             ORDER BY number_of_referrals  DESC;
-            `,
-            `SELECT a.FirstName, a.LastName, o.orderID, MAX(OrderDate) AS recent_order_date, MIN(p.discountPercent) as min_discount_percent
-            FROM Account a 
-            INNER JOIN Passenger p ON a.AccountID = p.AccountID
-            INNER JOIN PickupOrder po ON p.passengerID = po.PassengerID
-            INNER JOIN Orders o ON po.orderID = o.orderID
-            GROUP BY a.FirstName, a.LastName, o.orderID
-            ORDER BY recent_order_date, min_discount_percent;
-            `
-            `SELECT a.AccountID, a.FirstName, a.LastName, a.Rating
-            FROM Account a, Passenger p
-            WHERE a.AccountID = p.AccountID
-            AND a.Rating >= 4
-            UNION ALL
-            SELECT a.AccountID, a.FirstName, a.LastName, a.Rating
-            FROM Account a, Driver d
-            WHERE a.AccountID = d.AccountID
-            AND a.Rating >= 4;
             `
         ];
         for (const statement of queryTableSql) {

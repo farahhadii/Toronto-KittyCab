@@ -1,7 +1,6 @@
-async function queryTable() {
-    const response = await fetch(`http://localhost:4000/query-table`, {
-        method: 'POST',
-    });
+async function myFunction() {
+    const response = await fetch(`http://localhost:4000/query-table`);
+    
 
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
