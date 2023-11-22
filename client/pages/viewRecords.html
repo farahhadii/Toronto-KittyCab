@@ -10,23 +10,20 @@
     <script src="../components/navbar.js" type="text/javascript" defer></script>
     <script src="../js/viewRecords.js" type="text/javascript" defer></script>
     <!--<link rel="icon" href="./media/" type="image/*"> -->
-
 </head>
-
 <body>
     <navbar-component></navbar-component>
-
     <div class="content">
         <div class="view-records-container" id="view-records">
             <a href="viewTables.html" class="go-back-btn">&larr; Go Back</a>
-
             <h1>View Records</h1>
-
             <p>Table: <span id="table-name"></span></p>
-
-            <div id="column-names"></div>
-            <div class="records-container" id="records-container"></div>
-
+            <table class="styled-table" id="records-container">
+                <thead>
+                    <tr></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 
@@ -37,54 +34,59 @@
             console.log(records);
 
             const recordsContainer = document.getElementById('records-container');
-            const columnNamesContainer = document.getElementById('column-names');
 
-            recordsContainer.innerHTML = '';
-            columnNamesContainer.innerHTML = '';
+            const table = document.createElement('table');
+            table.classList.add('styled-table');
 
-            let count = 0;
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            Object.keys(records[0]).forEach(key => {
+                const th = document.createElement('th');
+                th.textContent = key;
+                headerRow.appendChild(th);
+            });
 
-            records.forEach(record => {
-                const recordDiv = document.createElement('div');
-                recordDiv.classList.add('record-entry', 'record-row');
+            const editDeleteHeader = document.createElement('th');
+            editDeleteHeader.textContent = 'Edit/Delete';
+            headerRow.appendChild(editDeleteHeader);
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
 
-                Object.keys(record).forEach((key, index, keys) => {
-                    if (count === 0 && key !== undefined) {
-                        const keys = Object.keys(record)
-                        const columnNameDiv = document.createElement('div');
-                        columnNameDiv.classList.add('column-input');
+            const tbody = document.createElement('tbody');
 
-                        keys.forEach(k => {
-                            const strongElement = document.createElement('strong');
-                            strongElement.style.width = '156px';
-                            strongElement.textContent = k;
-                            columnNameDiv.appendChild(strongElement);
-                        });
+            records.forEach((record, index) => {
+                const row = document.createElement('tr');
 
-                        columnNamesContainer.appendChild(columnNameDiv);
-                        count += 1;
-                    }
-
-                    const fieldDiv = document.createElement('div');
-
-                    fieldDiv.innerHTML = `<input type="text" value="${record[key]}" size="${17}">`;
-
-                    if (index === keys.length - 1) {
-                        const deleteButton = document.createElement('button');
-                        deleteButton.textContent = 'Delete';
-                        deleteButton.addEventListener('click', () => {
-                            // Farah make it call delete
-                            console.log(`Delete button clicked for row with ${key}: ${record[key]}`);
-                        });
-                        fieldDiv.appendChild(deleteButton);
-                    }
-
-                    recordDiv.appendChild(fieldDiv);
-
+                Object.values(record).forEach(value => {
+                    const td = document.createElement('td');
+                    td.textContent = value;
+                    row.appendChild(td);
                 });
 
-                recordsContainer.appendChild(recordDiv);
+                const editButton = document.createElement('button');
+                editButton.classList.add('edit-button');
+                editButton.textContent = 'Edit';
+                editButton.addEventListener('click', () => {
+                    console.log(`Edit button clicked for row ${index}`);
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.addEventListener('click', () => {
+                    console.log(`Delete button clicked for row ${index}`);
+                });
+
+                row.appendChild(editButton);
+                row.appendChild(deleteButton);
+
+                tbody.appendChild(row);
             });
+
+            table.appendChild(tbody);
+
+            recordsContainer.appendChild(table);
         });
     </script>
 
