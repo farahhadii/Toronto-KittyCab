@@ -446,9 +446,6 @@ app.get('/query1-table', async (req, res) => {
 app.get('/query2-table', async (req, res) => {
     let connection;
 
-    const tableName = req.query.table;
-    console.log(tableName);
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -490,9 +487,6 @@ app.get('/query2-table', async (req, res) => {
 app.get('/query3-table', async (req, res) => {
     let connection;
 
-    const tableName = req.query.table;
-    console.log(tableName);
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -532,9 +526,6 @@ app.get('/query3-table', async (req, res) => {
 //Viewing table endpoint
 app.get('/query4-table', async (req, res) => {
     let connection;
-
-    const tableName = req.query.table;
-    console.log(tableName);
 
     try {
         // Establish a connection to the Oracle Database
