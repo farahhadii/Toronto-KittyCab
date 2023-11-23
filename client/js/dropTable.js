@@ -1,5 +1,11 @@
 async function myFunction() {
-    const response = await fetch(`http://localhost:4000/drop-table`);
+    const response = await fetch('http://localhost:4000/drop-table', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    console.log("Drop")
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }

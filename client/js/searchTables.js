@@ -1,10 +1,10 @@
 async function myFunction() {
     var params = new URLSearchParams(window.location.search);
-    var tableName = params.get('table');
+    var sqlQuery = document.getElementById("sqlQuery").value;
+    sqlQuery = sqlQuery.replace(/\n/g, ' ');
+    console.log(sqlQuery)
 
-    console.log(tableName)
-
-    const response = await fetch(`http://localhost:4000/search-table?table=${tableName}`, {
+    const response = await fetch(`http://localhost:4000/search-table?sqlQuery=${encodeURIComponent(sqlQuery)}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
