@@ -1,8 +1,14 @@
 # CPS510 - Toronto KittyCab
-## Stack
+## Build
 Front-end: JavaScript, CSS
+
 Back-end: Express, Node.js
+
 DB: Oracle SQL
+
+## About
+A9/10 for CPS510 - Introduction to Databases.
+Creating a database management system (DBMS) for a project like Toronto KittyCab, an Uber clone, involves designing a system to efficiently store, retrieve, and manage various types of data associated with the ride-sharing service.
 
 ## Prerequisites
 Have npm and node installed.

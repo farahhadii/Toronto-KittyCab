@@ -131,6 +131,9 @@ app.post('/create-table', async (req, res) => {
 //Inserting into table endpoint
 app.post('/populate-table', async (req, res) => {
     let connection;
+
+    console.log("Populate");
+
     try {
         connection = await oracledb.getConnection({
             user: process.env.DB_USER,
@@ -446,9 +449,6 @@ app.get('/query1-table', async (req, res) => {
 app.get('/query2-table', async (req, res) => {
     let connection;
 
-    const tableName = req.query.table;
-    console.log(tableName);
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -490,9 +490,6 @@ app.get('/query2-table', async (req, res) => {
 app.get('/query3-table', async (req, res) => {
     let connection;
 
-    const tableName = req.query.table;
-    console.log(tableName);
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -501,11 +498,11 @@ app.get('/query3-table', async (req, res) => {
             connectionString: process.env.DB_CONNECTION_STRING
         });
         // Execute the SELECT query
-        const result = await connection.execute(`SELECT DISTINCT a.Firstname, a.LastName
-        FROM Account a 
-        INNER JOIN Driver d ON a.AccountID = d.AccountID
-        WHERE experience >= 3
-        ORDER BY experience DESC`, [], {
+        const result = await connection.execute(`SELECT DISTINCT a.FirstName, a.LastName, p.SubscriptionType, SUM(p.NumOfReferrals) AS number_of_referrals 
+        FROM Account a
+        INNER JOIN Passenger p ON a.AccountID = p.AccountID
+        GROUP BY a.FirstName, a.LastName, p.SubscriptionType
+        ORDER BY number_of_referrals DESC`, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
         });
 
@@ -532,9 +529,6 @@ app.get('/query3-table', async (req, res) => {
 //Viewing table endpoint
 app.get('/query4-table', async (req, res) => {
     let connection;
-
-    const tableName = req.query.table;
-    console.log(tableName);
 
     try {
         // Establish a connection to the Oracle Database
