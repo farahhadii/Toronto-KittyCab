@@ -99,7 +99,7 @@
                 deleteButton.textContent = 'Delete';
                 deleteButton.classList.add('delete-button');
                 deleteButton.addEventListener('click', () => {
-                    console.log(`Delete button clicked for row ${index}`);
+                    row.remove();
                 });
 
                 const editDeleteCell = document.createElement('td');
