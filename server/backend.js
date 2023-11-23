@@ -131,6 +131,9 @@ app.post('/create-table', async (req, res) => {
 //Inserting into table endpoint
 app.post('/populate-table', async (req, res) => {
     let connection;
+
+    console.log("Populate");
+
     try {
         connection = await oracledb.getConnection({
             user: process.env.DB_USER,
