@@ -11,7 +11,7 @@ async function myFunction1() {
     }
 
     const data = await response.json();
-    // console.log(data);
+    console.log(data);
     return data;
 }
 
