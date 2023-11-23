@@ -200,7 +200,7 @@ app.post('/populate-table', async (req, res) => {
             await connection.execute(statement, [], { autoCommit: true });
         }
 
-        res.status(200);
+        res.status(200).send();
 
     } catch (err) {
         console.error(err);
@@ -248,7 +248,7 @@ app.post('/drop-table', async (req, res) => {
             }
         }
         
-        res.status(200).send("Tables dropped successfully");
+        res.status(200).send();
 
     } catch (err) {
         console.error(err);
