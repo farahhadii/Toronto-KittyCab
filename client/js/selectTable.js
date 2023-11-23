@@ -72,7 +72,32 @@ document.addEventListener('DOMContentLoaded', async function () {
         const editButton = document.createElement('button');
         editButton.textContent = 'Edit';
         editButton.classList.add('edit-button');
-        // Add event listener for editButton if needed
+        editButton.addEventListener('click', function editClickHandler() {
+            row.querySelectorAll('td:not(:last-child)').forEach((cell, cellIndex) => {
+                cell.setAttribute('contenteditable', true);
+            });
+
+            const firstCell = row.firstElementChild;
+            firstCell.focus();
+            const range = document.createRange();
+            range.selectNodeContents(firstCell);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            editButton.textContent = 'Save';
+            editButton.removeEventListener('click', editClickHandler);
+            editButton.addEventListener('click', function saveClickHandler() {
+                row.querySelectorAll('td').forEach((cell, cellIndex) => {
+                    cell.setAttribute('contenteditable', false);
+                });
+
+                editButton.textContent = 'Edit';
+                editButton.removeEventListener('click', saveClickHandler);
+                editButton.addEventListener('click', editClickHandler);
+            });
+        });
+
 
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
