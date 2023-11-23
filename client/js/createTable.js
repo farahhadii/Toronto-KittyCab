@@ -1,5 +1,11 @@
 async function myFunction() {
-    const response = await fetch(`http://localhost:4000/create-table`);
+    const response = await fetch('http://localhost:4000/create-table', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    console.log("Create")
 
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

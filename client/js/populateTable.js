@@ -1,5 +1,10 @@
 async function myFunction() {
-    const response = await fetch(`http://localhost:4000/populate-table`);
+    const response = await fetch('http://localhost:4000/populate-table', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
     if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }

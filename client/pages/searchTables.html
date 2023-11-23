@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toronto KittyCab | Query</title>
+    <title>Toronto KittyCab | Search</title>
     <link rel="stylesheet" type="text/css" href="../css/styles.css">
-    <link rel="stylesheet" type="text/css" href="../css/queryTables.css">
     <link rel="stylesheet" type="text/css" href="../css/viewRecords.css">
     <script src="../components/navbar.js" type="text/javascript" defer></script>
     <!--<link rel="icon" href="./media/" type="image/*"> -->
+
 </head>
 
 <body>
@@ -18,35 +18,34 @@
         <p>&copy; Toronto KittyCab 2023</p>
     </div>
     <div class="content">
-        <div class="query-container" id="query">
-            <h1>Query Tables</h1>
+        <div class="create-container" id="create">
+            <h1>Create Tables</h1><br>
 
-            <div class="query-button">
-                <button onclick="handleButtonClick(myFunction1)">First Query</button>
-                <button onclick="handleButtonClick(myFunction2)">Second Query</button>
-                <button onclick="handleButtonClick(myFunction3)">Third Query</button>
-                <button onclick="handleButtonClick(myFunction4)">Fourth Query</button>
+            <form>
+                <label for="sqlQuery">SQL Query:</label><br><br>
+                <textarea id="sqlQuery" name="sqlQuery" rows="6" cols="50"
+                    placeholder="Enter your SQL query here..."></textarea><br><br>
+                <button type="button" onclick="handleButtonClick()" class="edit-button">Create Table</button>
+            </form><br>
+
+            <div class="view-records-container" id="view-records">
+                <h1>Custom Output</h1>
+                <table class="styled-table" id="records-container">
+                    <thead>
+                        <tr></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
-
-        </div>
-
-        <div class="view-records-container" id="view-records">
-            <h1>Custom Output</h1>
-            <table class="styled-table" id="records-container">
-                <thead>
-                    <tr></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
         </div>
     </div>
 
-    <script src="../js/queryTable.js"></script>
+    <script src="../js/searchTables.js"></script>
 
     <script>
-        async function handleButtonClick(func) {
+        async function handleButtonClick() {
             // Call myFunction from the external script
-            const result = await func();
+            const result = await myFunction();
 
             console.log(result);
 
@@ -96,7 +95,6 @@
             recordsContainer.appendChild(table);
         }
     </script>
-
 
     <footer>
         <div class="copyright">

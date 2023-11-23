@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
 //Creating tables endpoint
 app.post('/create-table', async (req, res) => {
     let connection;
+    console.log("HIIII")
     try {
         connection = await oracledb.getConnection({
             user: process.env.DB_USER,
@@ -364,53 +365,10 @@ app.get('/select-table', async (req, res) => {
     }
 });
 
-app.get('/delete-row', async (req, res) => {
-    let connection;
-
-    const tableName = req.query.table;
-    console.log(tableName);
-
-    try {
-        // Establish a connection to the Oracle Database
-        connection = await oracledb.getConnection({
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            connectionString: process.env.DB_CONNECTION_STRING
-        });
-        // Execute the SELECT query
-        const result = await connection.execute(`DELETE FROM ${tableName} WHERE ${column}=${id}`, [], {
-            outFormat: oracledb.OUT_FORMAT_OBJECT,
-            outFormat: oracledb.OUT_FORMAT_OBJECT,
-          });
-
-        // Send the result back to the client
-        console.log(result);
-        res.status(200).json(result.rows);
-
-    } catch (error) {
-        console.error('Error executing query:', error);
-        res.status(500).send('Error executing query: ' + error.message);
-
-    } finally {
-        // Release the connection when done
-        if (connection) {
-            try {
-                await connection.close();
-            } catch (error) {
-                console.error('Error closing connection:', error);
-            }
-        }
-    }
-});
-
-
 //Viewing table endpoint
 app.get('/query1-table', async (req, res) => {
     let connection;
 
-    const tableName = req.query.table;
-    console.log(tableName);
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -419,7 +377,7 @@ app.get('/query1-table', async (req, res) => {
             connectionString: process.env.DB_CONNECTION_STRING
         });
         // Execute the SELECT query
-        const result = await connection.execute( `SELECT DISTINCT FirstName, LastName
+        const result = await connection.execute(`SELECT DISTINCT FirstName, LastName
         FROM Account
         INNER JOIN Passenger ON Account.AccountID = Passenger.AccountID
         ORDER BY FirstName, LastName`, [], {
