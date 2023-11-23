@@ -1,6 +1,6 @@
 # CPS510 - Toronto KittyCab
 ## Build
-Front-end: JavaScript, CSS
+Front-end: JavaScript, HTML, CSS
 
 Back-end: Express, Node.js
 
