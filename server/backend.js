@@ -402,11 +402,11 @@ app.get('/query3-table', async (req, res) => {
             connectionString: process.env.DB_CONNECTION_STRING
         });
         // Execute the SELECT query
-        const result = await connection.execute(`SELECT DISTINCT  item_name, COUNT(*)
-        FROM items
-        WHERE item_Description LIKE ‘%a%’ OR item_Description LIKE ‘%e%’ OR item_Description LIKE ‘%i%’ OR item_Description LIKE ‘%o%’ OR item_Description LIKE ‘%u%’
-        ORDER BY COUNT(*) ASC;
-        ;
+        const result = await connection.execute(`SELECT DISTINCT a.FirstName, a.LastName, p.SubscriptionType, SUM(p.NumOfReferrals) AS number_of_referrals 
+        FROM Account a
+        INNER JOIN Passenger p ON a.AccountID = p.AccountID
+        GROUP BY a.FirstName, a.LastName, p.SubscriptionType
+        ORDER BY number_of_referrals DESC
         `, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
           });
