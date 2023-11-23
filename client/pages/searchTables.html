@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toronto KittyCab | Search</title>
     <link rel="stylesheet" type="text/css" href="../css/styles.css">
-    <link rel="stylesheet" type="text/css" href="../css/searchTables.css">
+    <link rel="stylesheet" type="text/css" href="../css/viewRecords.css">
     <script src="../components/navbar.js" type="text/javascript" defer></script>
-     <!--<link rel="icon" href="./media/" type="image/*"> -->
+    <!--<link rel="icon" href="./media/" type="image/*"> -->
 
 </head>
 
@@ -19,17 +19,82 @@
     </div>
     <div class="content">
         <div class="create-container" id="create">
-            <h1>Create Tables</h1>
-             
+            <h1>Create Tables</h1><br>
+
             <form>
                 <label for="sqlQuery">SQL Query:</label><br><br>
-                <textarea id="sqlQuery" name="sqlQuery" rows="6" cols="50" placeholder="Enter your SQL query here..."></textarea><br>
-                <button type="button" onclick="myFunction()">Create Table</button>
-            </form>
+                <textarea id="sqlQuery" name="sqlQuery" rows="6" cols="50"
+                    placeholder="Enter your SQL query here..."></textarea><br><br>
+                <button type="button" onclick="handleButtonClick()" class="edit-button">Create Table</button>
+            </form><br>
+
+            <div class="view-records-container" id="view-records">
+                <h1>Custom Output</h1>
+                <table class="styled-table" id="records-container">
+                    <thead>
+                        <tr></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script src="../js/searchTables.js"></script>
+
+    <script>
+        async function handleButtonClick() {
+            // Call myFunction from the external script
+            const result = await myFunction();
+
+            console.log(result);
+
+            const records = result;
+            console.log(records);
+
+            const recordsContainer = document.getElementById('records-container');
+
+            // Remove existing table, if any
+            const existingTable = recordsContainer.querySelector('table');
+            if (existingTable) {
+                existingTable.remove();
+            }
+
+            // Create a new table
+            const table = document.createElement('table');
+            table.classList.add('styled-table');
+
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+
+            Object.keys(records[0]).forEach(key => {
+                const th = document.createElement('th');
+                th.textContent = key;
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            const tbody = document.createElement('tbody');
+
+            records.forEach((record, index) => {
+                const row = document.createElement('tr');
+
+                Object.entries(record).forEach(([key, value]) => {
+                    const td = document.createElement('td');
+                    td.textContent = value;
+                    row.appendChild(td);
+                });
+
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(tbody);
+
+            recordsContainer.appendChild(table);
+        }
+    </script>
 
     <footer>
         <div class="copyright">
