@@ -287,13 +287,6 @@ app.post('/query-table', async (req, res) => {
             WHERE o.OrderCost < 500
             ORDER BY o.OrderCost;
             `,
-            `SELECT DISTINCT a.AccountID, a.FirstName, a.LastName, d.DriverID, c.CarMake, c.CarModel, c.CarYear
-            FROM Driver d
-            INNER JOIN Car c ON d.CarID = c.CarID
-            INNER JOIN Account a ON d.AccountID = a.AccountID
-            WHERE c.CarYear > 2015
-            ORDER BY c.CarMake, c.CarModel;
-            `,
             `SELECT DISTINCT a.Firstname, a.LastName
             FROM Account a 
             INNER JOIN Driver d ON a.AccountID = d.AccountID
@@ -306,32 +299,6 @@ app.post('/query-table', async (req, res) => {
             INNER JOIN PickupOrder po ON p.PassengerID = po.PassengerID
             GROUP BY a.FirstName, a.LastName 
             ORDER BY total_amount;
-            `,
-            `SELECT DISTINCT  item_name, COUNT(*)
-            FROM items
-            WHERE item_Description LIKE ‘%a%’ OR item_Description LIKE ‘%e%’ OR item_Description LIKE ‘%i%’ OR item_Description LIKE ‘%o%’ OR item_Description LIKE ‘%u%’
-            ORDER BY COUNT(*) ASC;
-            `,
-            `SELECT d.DriverID, a.FirstName, a.LastName, SUM(o.OrderCost) AS TotalOrderCost
-            FROM Driver d
-            JOIN Account a ON d.AccountID = a.AccountID
-            LEFT JOIN ORDERS o ON d.DriverID = o.DriverID
-            GROUP BY d.DriverID, a.FirstName, a.LastName
-            ORDER BY TotalOrderCost DESC;
-            `,
-            `SELECT DISTINCT a.AccountID, a.FirstName, a.LastName, d.DriverID, c.CarMake, c.CarModel, c.CarYear
-            FROM Driver d
-            INNER JOIN Car c ON d.CarID = c.CarID
-            INNER JOIN Account a ON d.AccountID = a.AccountID
-            WHERE c.CarYear > 2010 
-            AND (c.CarTier = 'platinum' OR c.CarTier = 'XL')
-            ORDER BY c.CarMake, c.CarModel;
-            `,
-            `SELECT DISTINCT a.FirstName, a.LastName, p.SubscriptionType, SUM(p.NumOfReferrals) AS number_of_referrals 
-            FROM Account a
-            INNER JOIN Passenger p ON a.AccountID = p.AccountID
-            GROUP BY a.FirstName, a.LastName, p.SubscriptionType
-            ORDER BY number_of_referrals  DESC;
             `
         ];
         for (const statement of queryTableSql) {
@@ -374,6 +341,179 @@ app.get('/select-table', async (req, res) => {
         });
         // Execute the SELECT query
         const result = await connection.execute(`select * from ${tableName}`, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+          });
+
+        // Send the result back to the client
+        console.log(result);
+        res.status(200).json(result.rows);
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        res.status(500).send('Error executing query: ' + error.message);
+
+    } finally {
+        // Release the connection when done
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (error) {
+                console.error('Error closing connection:', error);
+            }
+        }
+    }
+});
+
+//Viewing table endpoint
+app.get('/query1-table', async (req, res) => {
+    let connection;
+
+    const tableName = req.query.table;
+    console.log(tableName);
+
+    try {
+        // Establish a connection to the Oracle Database
+        connection = await oracledb.getConnection({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
+        });
+        // Execute the SELECT query
+        const result = await connection.execute( `SELECT DISTINCT FirstName, LastName
+        FROM Account
+        INNER JOIN Passenger ON Account.AccountID = Passenger.AccountID
+        ORDER BY FirstName, LastName`, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+          });
+
+        // Send the result back to the client
+        console.log(result);
+        res.status(200).json(result.rows);
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        res.status(500).send('Error executing query: ' + error.message);
+
+    } finally {
+        // Release the connection when done
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (error) {
+                console.error('Error closing connection:', error);
+            }
+        }
+    }
+});
+
+//Viewing table endpoint
+app.get('/query2-table', async (req, res) => {
+    let connection;
+
+    const tableName = req.query.table;
+    console.log(tableName);
+
+    try {
+        // Establish a connection to the Oracle Database
+        connection = await oracledb.getConnection({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
+        });
+        // Execute the SELECT query
+        const result = await connection.execute(`SELECT po.PackageOrderID, o.OrderCost, o.OrderDate
+        FROM PackageOrder po
+        INNER JOIN Orders o ON po.OrderID = o.OrderID
+        WHERE o.OrderCost < 500
+        ORDER BY o.OrderCost
+        `, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+          });
+
+        // Send the result back to the client
+        console.log(result);
+        res.status(200).json(result.rows);
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        res.status(500).send('Error executing query: ' + error.message);
+
+    } finally {
+        // Release the connection when done
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (error) {
+                console.error('Error closing connection:', error);
+            }
+        }
+    }
+});
+
+//Viewing table endpoint
+app.get('/query3-table', async (req, res) => {
+    let connection;
+
+    const tableName = req.query.table;
+    console.log(tableName);
+
+    try {
+        // Establish a connection to the Oracle Database
+        connection = await oracledb.getConnection({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
+        });
+        // Execute the SELECT query
+        const result = await connection.execute(`SELECT DISTINCT a.Firstname, a.LastName
+        FROM Account a 
+        INNER JOIN Driver d ON a.AccountID = d.AccountID
+        WHERE experience >= 3
+        ORDER BY experience DESC`, [], {
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+          });
+
+        // Send the result back to the client
+        console.log(result);
+        res.status(200).json(result.rows);
+
+    } catch (error) {
+        console.error('Error executing query:', error);
+        res.status(500).send('Error executing query: ' + error.message);
+
+    } finally {
+        // Release the connection when done
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (error) {
+                console.error('Error closing connection:', error);
+            }
+        }
+    }
+});
+
+//Viewing table endpoint
+app.get('/query4-table', async (req, res) => {
+    let connection;
+
+    const tableName = req.query.table;
+    console.log(tableName);
+
+    try {
+        // Establish a connection to the Oracle Database
+        connection = await oracledb.getConnection({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
+        });
+        // Execute the SELECT query
+        const result = await connection.execute(`SELECT DISTINCT a.FirstName, a.LastName, COUNT(po.orderID) as total_amount
+        FROM Account a
+        INNER JOIN Passenger p ON a.AccountID = p.AccountID
+        INNER JOIN PickupOrder po ON p.PassengerID = po.PassengerID
+        GROUP BY a.FirstName, a.LastName 
+        ORDER BY total_amount`, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
           });
 
