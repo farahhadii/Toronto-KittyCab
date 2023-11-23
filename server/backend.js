@@ -265,67 +265,6 @@ app.post('/drop-table', async (req, res) => {
     }
 });
 
-// Query Table 
-app.post('/query-table', async (req, res) => {
-    let connection;
-    try {
-        connection = await oracledb.getConnection({
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            connectionString: process.env.DB_CONNECTION_STRING
-        });
-        console.log("Successfully connected to Oracle Database");
-
-        const queryTableSql = [
-            `SELECT DISTINCT FirstName, LastName
-            FROM Account
-            INNER JOIN Passenger ON Account.AccountID = Passenger.AccountID
-            ORDER BY FirstName, LastName;
-            `,
-            `SELECT po.PackageOrderID, o.OrderCost, o.OrderDate
-            FROM PackageOrder po
-            INNER JOIN Orders o ON po.OrderID = o.OrderID
-            WHERE o.OrderCost < 500
-            ORDER BY o.OrderCost;
-            `,
-            `SELECT DISTINCT a.Firstname, a.LastName
-            FROM Account a 
-            INNER JOIN Driver d ON a.AccountID = d.AccountID
-            WHERE experience >= 3
-            ORDER BY experience DESC;
-            `,
-            `SELECT DISTINCT a.FirstName, a.LastName, COUNT(po.orderID) as total_amount
-            FROM Account a
-            INNER JOIN Passenger p ON a.AccountID = p.AccountID
-            INNER JOIN PickupOrder po ON p.PassengerID = po.PassengerID
-            GROUP BY a.FirstName, a.LastName 
-            ORDER BY total_amount;
-            `
-        ];
-        for (const statement of queryTableSql) {
-            try {
-                await connection.execute(statement, [], { autoCommit: true });
-            } catch (err) {
-                console.error('Error querying table statement: ', statement, 'Error: ', err);
-            }
-        }
-        
-        res.status(200).send("Tables queried succesffuly ");
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error querying tables: " + err.message);
-    } finally {
-        if (connection) {
-            try {
-                await connection.close();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }
-});
-
 //Viewing table endpoint
 app.get('/select-table', async (req, res) => {
     let connection;
@@ -342,44 +281,6 @@ app.get('/select-table', async (req, res) => {
         });
         // Execute the SELECT query
         const result = await connection.execute(`select * from ${tableName}`, [], {
-            outFormat: oracledb.OUT_FORMAT_OBJECT,
-          });
-
-        // Send the result back to the client
-        console.log(result);
-        res.status(200).json(result.rows);
-
-    } catch (error) {
-        console.error('Error executing query:', error);
-        res.status(500).send('Error executing query: ' + error.message);
-
-    } finally {
-        // Release the connection when done
-        if (connection) {
-            try {
-                await connection.close();
-            } catch (error) {
-                console.error('Error closing connection:', error);
-            }
-        }
-    }
-});
-
-//Custom Search table endpoint
-app.get('/search-table', async (req, res) => {
-    let connection;
-
-    const sqlQuery = req.query.sqlQuery;
-
-    try {
-        // Establish a connection to the Oracle Database
-        connection = await oracledb.getConnection({
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            connectionString: process.env.DB_CONNECTION_STRING
-        });
-        // Execute the SELECT query
-        const result = await connection.execute(sqlQuery, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
           });
 
@@ -495,11 +396,12 @@ app.get('/query3-table', async (req, res) => {
             connectionString: process.env.DB_CONNECTION_STRING
         });
         // Execute the SELECT query
-        const result = await connection.execute(`SELECT DISTINCT a.Firstname, a.LastName
-        FROM Account a 
-        INNER JOIN Driver d ON a.AccountID = d.AccountID
-        WHERE experience >= 3
-        ORDER BY experience DESC`, [], {
+        const result = await connection.execute(`SELECT DISTINCT  item_name, COUNT(*)
+        FROM items
+        WHERE item_Description LIKE ‘%a%’ OR item_Description LIKE ‘%e%’ OR item_Description LIKE ‘%i%’ OR item_Description LIKE ‘%o%’ OR item_Description LIKE ‘%u%’
+        ORDER BY COUNT(*) ASC;
+        ;
+        `, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
           });
 
