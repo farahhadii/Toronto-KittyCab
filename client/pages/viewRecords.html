@@ -78,9 +78,9 @@
                     firstCell.focus();
                     const range = document.createRange();
                     range.selectNodeContents(firstCell);
-                    const sel = window.getSelection();
-                    sel.removeAllRanges();
-                    sel.addRange(range);
+                    const selection = window.getSelection();
+                    selection.removeAllRanges();
+                    selection.addRange(range);
 
                     editButton.textContent = 'Save';
                     editButton.removeEventListener('click', editClickHandler);
