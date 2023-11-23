@@ -16,6 +16,7 @@ class Header extends HTMLElement {
                 <li><a href="../pages/queryTables.html">Query</a></li>
                 <li><a href="../pages/dropTables.html">Drop</a></li>
                 <li><a href="../pages/viewTables.html">View</a></li>
+                <li><a href="../pages/searchTables.html">Custom Search</a></li>
             </ul>
         </nav>
         </header>
