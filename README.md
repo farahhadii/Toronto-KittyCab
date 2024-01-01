@@ -1,4 +1,4 @@
-# CPS510 - Toronto KittyCab
+Toronto KittyCab
 ## Build
 Front-end: JavaScript, HTML, CSS
 
