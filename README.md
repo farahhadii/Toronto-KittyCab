@@ -6,7 +6,7 @@ Back-end: Express, Node.js
 DB: Oracle SQL
 
 ## About
-Creating a database management system (DBMS) for a project called Toronto KittyCab, an Uber clone, involves designing a system to efficiently store, retrieve, and manage various types of data associated with the ride-sharing service.
+Developing a Database Management System (DBMS) for Toronto KittyCab, a project inspired by Uber. This involves designing a system to efficiently store, retrieve, and manage various types of data associated with the ride-sharing service.
 
 ## Prerequisites
 Have npm and node installed.
