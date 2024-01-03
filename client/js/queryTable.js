@@ -67,10 +67,14 @@ async function myFunction4() {
     return data;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('.splash-screen').style.display = 'flex';
-    setTimeout(function () {
-        document.querySelector('.splash-screen').style.display = 'none';
-        document.querySelector('.content').style.display = 'block';
-    }, 1000);
-});
+function showSplashScreen() { 
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('.splash-screen').style.display = 'flex';
+        setTimeout(function () {
+            document.querySelector('.splash-screen').style.display = 'none';
+            document.querySelector('.content').style.display = 'block';
+        }, 1000);
+    });
+}
+
+showSplashScreen();
