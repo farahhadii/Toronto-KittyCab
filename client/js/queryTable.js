@@ -10,8 +10,7 @@ async function myFunction1() {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const data = await response.json();
-    console.log(data);
+    const data = await response.json(); // retrieves the JSON data from the server's response. 
     return data;
 }
 
@@ -29,7 +28,6 @@ async function myFunction2() {
     }
 
     const data = await response.json();
-    // console.log(data);
     return data;
 }
 
@@ -46,7 +44,6 @@ async function myFunction3() {
     }
 
     const data = await response.json();
-    // console.log(data);
     return data;
 }
 
@@ -63,7 +60,6 @@ async function myFunction4() {
     }
 
     const data = await response.json();
-    // console.log(data);
     return data;
 }
 

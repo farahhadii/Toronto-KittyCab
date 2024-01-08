@@ -2,7 +2,7 @@
 async function myFunction() {
     var params = new URLSearchParams(window.location.search);
     var tableName = params.get('table');
-    console.log(tableName);
+    document.getElementById("table-name").innerText = tableName;
 
     const response = await fetch(`http://localhost:4000/select-table?table=${tableName}`, {
         method: 'GET',
@@ -16,12 +16,14 @@ async function myFunction() {
     }
 
     const data = await response.json();
+    console.log(data);
     return data;
 }
 
 // Event listener for DOMContentLoaded
 document.addEventListener('DOMContentLoaded', async function () {
     const records = await myFunction();
+    console.log(records);
     const recordsContainer = document.getElementById('records-container');
 
     const table = document.createElement('table');
@@ -46,12 +48,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Create table body
     const tbody = document.createElement('tbody');
-
-
     let firstObject = records[0]; 
     let keys = Object.keys(firstObject);
     let primaryKeyColumn = keys[0];
-    console.log(primaryKeyColumn);
 
     records.forEach(record => {
         const row = document.createElement('tr');
@@ -119,6 +118,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 // Function to handle the deletion of a record
 async function handleDelete(recordId, primaryKeyColumn, row) {
+    console.log(recordId);
+    console.log(primaryKeyColumn);
+    console.log(row);
     var params = new URLSearchParams(window.location.search);
     var tableName = params.get('table');
 

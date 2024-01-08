@@ -10,15 +10,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-    console.log("Hello");
-})
-
 //Creating tables endpoint
 app.post('/create-table', async (req, res) => {
     let connection;
-    console.log("HIIII")
+    console.log("create");
     try {
         connection = await oracledb.getConnection({
             user: process.env.DB_USER,
@@ -52,7 +47,7 @@ app.post('/create-table', async (req, res) => {
                 FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
             )`,
             `CREATE TABLE Car_Model (
-                VINNumber INT CHECK (VINNumber >= 00000000000000001 and VINNumber <= 999999999999999999),
+                VINNumber INT CHECK (VINNumber >= 00000000000000001 and VINNumber <= 99999999999999999),
                 CarModelName VARCHAR(255),
                 CarYear INT CHECK (CarYear > 0 and CarYear <= 2024),
                 PRIMARY KEY (VINNumber, CarModelName)
@@ -131,9 +126,7 @@ app.post('/create-table', async (req, res) => {
 //Inserting into table endpoint
 app.post('/populate-table', async (req, res) => {
     let connection;
-
     console.log("Populate");
-
     try {
         connection = await oracledb.getConnection({
             user: process.env.DB_USER,
@@ -166,15 +159,15 @@ app.post('/populate-table', async (req, res) => {
             `INSERT INTO Driver VALUES (3004, 1009, 'T4345-67894-23678', 4)`,
             `INSERT INTO Driver VALUES (3005, 1010, 'L5678-43211-98567', 6)`,
 
-            `INSERT INTO Car_Model VALUES (60000000000000024, 'camry', 2013)`,
-            `INSERT INTO Car_Model VALUES (60000000000000025, 'i3', 2015)`,
-            `INSERT INTO Car_Model VALUES (60000000000000026, 'a4', 2015)`,
-            `INSERT INTO Car_Model VALUES (60000000000000027, 'c400', 2014)`,
+            `INSERT INTO Car_Model VALUES (6000000000000001, 'camry', 2013)`,
+            `INSERT INTO Car_Model VALUES (6000000000000002, 'i3', 2015)`,
+            `INSERT INTO Car_Model VALUES (6000000000000003, 'a4', 2015)`,
+            `INSERT INTO Car_Model VALUES (6000000000000004, 'c400', 2014)`,
 
-            `INSERT INTO Car_Make VALUES (4000, 'toyota', 'camry', 60000000000000024, 'economy')`,
-            `INSERT INTO Car_Make VALUES (4001, 'BMW', 'i3', 60000000000000025, 'platinum')`,
-            `INSERT INTO Car_Make VALUES (4002, 'audi', 'a4', 60000000000000026, 'green')`,
-            `INSERT INTO Car_Make VALUES (4003, 'mercedes', 'c400', 60000000000000027, 'platinum')`,
+            `INSERT INTO Car_Make VALUES (4000, 'toyota', 'camry', 6000000000000001, 'economy')`,
+            `INSERT INTO Car_Make VALUES (4001, 'BMW', 'i3', 6000000000000002, 'platinum')`,
+            `INSERT INTO Car_Make VALUES (4002, 'audi', 'a4', 6000000000000003, 'green')`,
+            `INSERT INTO Car_Make VALUES (4003, 'mercedes', 'c400', 6000000000000004, 'platinum')`,
 
             `INSERT INTO Registered_Car VALUES (4000, 3000, 'Yes')`,
             `INSERT INTO Registered_Car VALUES (4001, 3001, 'Yes')`,
@@ -224,6 +217,7 @@ app.post('/populate-table', async (req, res) => {
 //Dropping table endpoint
 app.post('/drop-table', async (req, res) => {
     let connection;
+    console.log("drop");
     try {
         connection = await oracledb.getConnection({
             user: process.env.DB_USER,
@@ -268,74 +262,10 @@ app.post('/drop-table', async (req, res) => {
     }
 });
 
-// Query Table 
-app.post('/query-table', async (req, res) => {
-    let connection;
-    try {
-        connection = await oracledb.getConnection({
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            connectionString: process.env.DB_CONNECTION_STRING
-        });
-        console.log("Successfully connected to Oracle Database");
-
-        const queryTableSql = [
-            `SELECT DISTINCT FirstName, LastName
-            FROM Account
-            INNER JOIN Passenger ON Account.AccountID = Passenger.AccountID
-            ORDER BY FirstName, LastName;
-            `,
-            `SELECT po.PackageOrderID, o.OrderCost, o.OrderDate
-            FROM PackageOrder po
-            INNER JOIN Orders o ON po.OrderID = o.OrderID
-            WHERE o.OrderCost < 500
-            ORDER BY o.OrderCost;
-            `,
-            `SELECT DISTINCT a.Firstname, a.LastName
-            FROM Account a 
-            INNER JOIN Driver d ON a.AccountID = d.AccountID
-            WHERE experience >= 3
-            ORDER BY experience DESC;
-            `,
-            `SELECT DISTINCT a.FirstName, a.LastName, COUNT(po.orderID) as total_amount
-            FROM Account a
-            INNER JOIN Passenger p ON a.AccountID = p.AccountID
-            INNER JOIN PickupOrder po ON p.PassengerID = po.PassengerID
-            GROUP BY a.FirstName, a.LastName 
-            ORDER BY total_amount;
-            `
-        ];
-        for (const statement of queryTableSql) {
-            try {
-                await connection.execute(statement, [], { autoCommit: true });
-            } catch (err) {
-                console.error('Error querying table statement: ', statement, 'Error: ', err);
-            }
-        }
-
-        res.status(200).send("Tables queried succesffuly ");
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error querying tables: " + err.message);
-    } finally {
-        if (connection) {
-            try {
-                await connection.close();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }
-});
-
 //Viewing table endpoint
 app.get('/select-table', async (req, res) => {
     let connection;
-
     const tableName = req.query.table;
-    console.log(tableName);
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -347,9 +277,7 @@ app.get('/select-table', async (req, res) => {
         const result = await connection.execute(`select * from ${tableName}`, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
         });
-
         // Send the result back to the client
-        console.log(result);
         res.status(200).json(result.rows);
 
     } catch (error) {
@@ -371,7 +299,6 @@ app.get('/select-table', async (req, res) => {
 //Custom Search table endpoint
 app.get('/search-table', async (req, res) => {
     let connection;
-
     const sqlQuery = req.query.sqlQuery;
 
     try {
@@ -385,7 +312,6 @@ app.get('/search-table', async (req, res) => {
         const result = await connection.execute(sqlQuery, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
         });
-
         // Send the result back to the client
         console.log(result);
         res.status(200).json(result.rows);
@@ -406,10 +332,9 @@ app.get('/search-table', async (req, res) => {
     }
 });
 
-//Viewing table endpoint
+//Viewing query 1 
 app.get('/query1-table', async (req, res) => {
     let connection;
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -424,9 +349,7 @@ app.get('/query1-table', async (req, res) => {
         ORDER BY FirstName, LastName`, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
         });
-
         // Send the result back to the client
-        console.log(result);
         res.status(200).json(result.rows);
 
     } catch (error) {
@@ -445,7 +368,7 @@ app.get('/query1-table', async (req, res) => {
     }
 });
 
-//Viewing table endpoint
+//Viewing query 2
 app.get('/query2-table', async (req, res) => {
     let connection;
 
@@ -465,9 +388,7 @@ app.get('/query2-table', async (req, res) => {
         `, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT,
         });
-
         // Send the result back to the client
-        console.log(result);
         res.status(200).json(result.rows);
 
     } catch (error) {
@@ -486,7 +407,7 @@ app.get('/query2-table', async (req, res) => {
     }
 });
 
-//Viewing table endpoint
+//Viewing query 3 
 app.get('/query3-table', async (req, res) => {
     let connection;
 
@@ -507,7 +428,6 @@ app.get('/query3-table', async (req, res) => {
         });
 
         // Send the result back to the client
-        console.log(result);
         res.status(200).json(result.rows);
 
     } catch (error) {
@@ -526,10 +446,9 @@ app.get('/query3-table', async (req, res) => {
     }
 });
 
-//Viewing table endpoint
+//Viewing query 4
 app.get('/query4-table', async (req, res) => {
     let connection;
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -548,7 +467,6 @@ app.get('/query4-table', async (req, res) => {
         });
 
         // Send the result back to the client
-        console.log(result);
         res.status(200).json(result.rows);
 
     } catch (error) {

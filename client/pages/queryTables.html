@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../css/queryTables.css">
     <link rel="stylesheet" type="text/css" href="../css/viewRecords.css">
     <script src="../components/navbar.js" type="text/javascript" defer></script>
-    <!--<link rel="icon" href="./media/" type="image/*"> -->
 </head>
-
 <body>
     <navbar-component></navbar-component>
     <div class="splash-screen">
@@ -20,7 +17,6 @@
     <div class="content">
         <div class="query-container" id="query">
             <h1>Query Tables</h1>
-
             <div class="query-button">
                 <button onclick="handleButtonClick(myFunction1)">First Query</button>
                 <button onclick="handleButtonClick(myFunction2)">Second Query</button>
@@ -29,7 +25,6 @@
             </div>
         </div>
         <br><br>
-
         <div class="view-records-container" id="view-records">
             <h1>Custom Output</h1>
             <table class="styled-table" id="records-container">
@@ -40,28 +35,20 @@
             </table>
         </div>
     </div>
-
     <script src="../js/queryTable.js"></script>
-
     <script>
         async function handleButtonClick(func) {
             // Call myFunction from the external script
             const result = await func();
-
-            console.log(result);
-
             const records = result;
-            console.log(records);
-
             const recordsContainer = document.getElementById('records-container');
-
-            // Remove existing table, if any
+            
             const existingTable = recordsContainer.querySelector('table');
             if (existingTable) {
                 existingTable.remove();
             }
 
-            // Create a new table
+            // Creates a new table
             const table = document.createElement('table');
             table.classList.add('styled-table');
 
@@ -92,17 +79,13 @@
             });
 
             table.appendChild(tbody);
-
             recordsContainer.appendChild(table);
         }
     </script>
-
-
     <footer>
         <div class="copyright">
             &copy; Toronto KittyCab 2023
         </div>
     </footer>
 </body>
-
 </html>
