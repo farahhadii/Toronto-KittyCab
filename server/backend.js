@@ -371,7 +371,6 @@ app.get('/query1-table', async (req, res) => {
 //Viewing query 2
 app.get('/query2-table', async (req, res) => {
     let connection;
-
     try {
         // Establish a connection to the Oracle Database
         connection = await oracledb.getConnection({
@@ -516,6 +515,46 @@ app.delete('/delete-record/:table/:key/:id', async (req, res) => {
         }
     }
 });
+
+// Update a row in a specific table
+app.post('/update-row', async (req, res) => {
+    let connection;
+    try {
+        connection = await oracledb.getConnection({
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            connectionString: process.env.DB_CONNECTION_STRING
+        });
+
+        const { tableName, rowData, keyColumn, keyValue } = req.body;
+
+        // Construct the SQL Update Statement
+        const setClause = Object.entries(rowData)
+            .map(([key, value]) => `${key} = '${value}'`)
+            .join(', ');
+          
+        console.log(setClause);
+        console.log(keyColumn);
+        console.log(keyValue);
+        const updateSql = `UPDATE ${tableName} SET ${setClause} WHERE ${keyColumn} = '${keyValue}'`;
+
+        await connection.execute(updateSql, [], { autoCommit: true });
+
+        res.status(200).send("Row updated successfully");
+    } catch (err) {
+        console.error('Error updating row:', err);
+        res.status(500).send('Error updating row: ' + err.message);
+    } finally {
+        if (connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+            }
+        }
+    }
+});
+
 
 const port = 4000;
 app.listen(port, '0.0.0.0', () => {

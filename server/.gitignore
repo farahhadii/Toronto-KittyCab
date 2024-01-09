@@ -1,3 +1,4 @@
 instantclient_21_12
 #secret
 .env
+node_modules/

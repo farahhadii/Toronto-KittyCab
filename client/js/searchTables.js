@@ -11,7 +11,6 @@ async function myFunction() {
 
         sqlQuery = sqlQuery.replace(/\n/g, ' ');
         sqlQuery = sqlQuery.replace(';', ' ');
-        console.log(sqlQuery);
 
         const response = await fetch(`http://localhost:4000/search-table?sqlQuery=${encodeURIComponent(sqlQuery)}`, {
             method: 'GET',
@@ -25,9 +24,8 @@ async function myFunction() {
         }
 
         const data = await response.json();
-        console.log(data);
-
         return data;
+        
     } catch (error) {
         console.error('Error fetching data:', error);
         throw error;
